@@ -29,4 +29,4 @@ Output: MyID	OtherID AnotherID YetAnotherID ...
 # Usage
 
 Building: mvn package
-Running: hadoop jar target/friendly-1.0-jar-with-dependencies.jar INPUT_PATH/INPUT_FILE.txt OUTPUT_PATH
+Running: hadoop jar target/all-jar-with-dependencies.jar INPUT_PATH/INPUT_FILE.txt OUTPUT_PATH

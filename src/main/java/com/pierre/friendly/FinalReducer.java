@@ -13,16 +13,22 @@ public class FinalReducer extends Reducer<LongWritable, RecommWritable, LongWrit
 	protected void reduce(LongWritable key, Iterable<RecommWritable> values, Context context)
 			throws IOException, InterruptedException {
 		PriorityQueue<RecommWritable> queue = new PriorityQueue<>();
+		//RecommWritables are sorted by their b-value (number of common friends) first, then by their a-value (ID of the person)
 	    for(RecommWritable value : values) {
-			if (value.b != 0)
+			context.write(key, new Text(value.a + " " + value.b));
+			if (value.b != 0){
 				queue.add(value);
+				context.write(new LongWritable(405), new Text(value.a + " " + value.b));
+			}
 		}
 
 		StringBuilder ret = new StringBuilder();
 		for(int i = 0; i<10; i++) {
 			RecommWritable couple = queue.poll();
 			if(couple == null) break;
-			ret.append(couple.a).append(',');
+			context.write(new LongWritable(404), new Text(couple.a + " " + couple.b));
+			if(i != 0) ret.append(',');
+			ret.append(couple.a);
 		}
 		context.write(key, new Text(ret.toString()));
 	}

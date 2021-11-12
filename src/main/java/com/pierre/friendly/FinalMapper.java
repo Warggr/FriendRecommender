@@ -14,15 +14,15 @@ public class FinalMapper extends Mapper<LongWritable, Text, LongWritable, Recomm
             throws IOException, InterruptedException {
         String[] parts = value.toString().split("\t");
 
-        RecommWritable writable = new RecommWritable();
-        writable.b = Integer.valueOf(parts[1]);
+        RecommWritable writable = new RecommWritable(); //writable.a : ID of possible friend; writable.b : number of common connections
+        writable.b = Integer.valueOf(parts[1]); //reading the number of connections from input
 
-        CoupleWritable couple = CoupleWritable.fromText(parts[0]);
+        CoupleWritable couple = CoupleWritable.fromText(parts[0]); //couple.a = idA; couple.b = idB;
 
-        writable.a = couple.a;
-        context.write(new LongWritable(couple.b), writable);
+        writable.a = couple.a; //writable= {(id=)a : idA, (connections=)b : nbConnections }
+        context.write(new LongWritable(couple.b), writable); // write idB : idA x nbConnections
 
         writable.a = couple.b;
-        context.write(new LongWritable(couple.a), writable);
+        context.write(new LongWritable(couple.a), writable); // write idA : idB x nbConnections
     }
 }
