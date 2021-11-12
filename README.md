@@ -28,5 +28,10 @@ Output: MyID	OtherID AnotherID YetAnotherID ...
 
 # Usage
 
-Building: mvn package
-Running: hadoop jar target/all-jar-with-dependencies.jar INPUT_PATH/INPUT_FILE.txt OUTPUT_PATH
+**Building**: mvn package
+
+**Running**: hadoop jar target/all-jar-with-dependencies.jar INPUT_PATH/INPUT_FILE.txt OUTPUT_PATH
+
+*The directories OUTPUT\_PATH/first-mapper and OUTPUT\_PATH/second-mapper need to be non-existent or empty.*
+
+**Output**: in OUTPUT_PATH/second-mapper/part-r-0000

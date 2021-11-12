@@ -15,10 +15,8 @@ public class FinalReducer extends Reducer<LongWritable, RecommWritable, LongWrit
 		PriorityQueue<RecommWritable> queue = new PriorityQueue<>();
 		//RecommWritables are sorted by their b-value (number of common friends) first, then by their a-value (ID of the person)
 	    for(RecommWritable value : values) {
-			context.write(key, new Text(value.a + " " + value.b));
 			if (value.b != 0){
-				queue.add(value);
-				context.write(new LongWritable(405), new Text(value.a + " " + value.b));
+				queue.add(value.clone());
 			}
 		}
 
@@ -26,7 +24,6 @@ public class FinalReducer extends Reducer<LongWritable, RecommWritable, LongWrit
 		for(int i = 0; i<10; i++) {
 			RecommWritable couple = queue.poll();
 			if(couple == null) break;
-			context.write(new LongWritable(404), new Text(couple.a + " " + couple.b));
 			if(i != 0) ret.append(',');
 			ret.append(couple.a);
 		}

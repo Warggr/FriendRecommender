@@ -16,7 +16,7 @@ public class Writables {
         public PairWritable(A alice, B bob) { a = alice; b = bob; }
     }
 
-    public static class RecommWritable extends PairWritable<Long, Integer> implements WritableComparable<RecommWritable> {
+    public static class RecommWritable extends PairWritable<Long, Integer> implements WritableComparable<RecommWritable>, Cloneable {
         RecommWritable() {}
         RecommWritable(Long a, Integer b) { super(a, b); }
 
@@ -37,6 +37,11 @@ public class Writables {
             int d = Integer.compare(this.b, other.b);
             if(d == 0) return Long.compare(this.a, other.a);
             else return d;
+        }
+
+        @Override
+        public RecommWritable clone() {
+        	return new RecommWritable(a, b);
         }
     }
 

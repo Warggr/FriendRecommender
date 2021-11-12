@@ -42,7 +42,6 @@ public class SecondPartDriver extends Configured implements Tool {
         Path outputPath = new Path(args[1]);
         FileInputFormat.addInputPath(job2, inputPath);
         FileOutputFormat.setOutputPath(job2, outputPath);
-        //outputPath.getFileSystem(conf2).delete(outputPath, true); //delete recursively=true
 
         job2.waitForCompletion(true);
         System.out.println("Job 2 completed");
