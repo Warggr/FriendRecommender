@@ -1,25 +1,29 @@
 package com.pierre.friendly;
 
-import org.apache.hadoop.io.BooleanWritable;
-import org.apache.hadoop.io.IntWritable;
+import com.pierre.friendly.Writables.RecommWritable;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
+import java.util.PriorityQueue;
 
-public class FinalReducer extends Reducer<CoupleWritable, BooleanWritable, CoupleWritable, IntWritable>{
+public class FinalReducer extends Reducer<LongWritable, RecommWritable, LongWritable, Text>{
 	@Override
-	protected void reduce(CoupleWritable key, Iterable<BooleanWritable> values, Context context)
+	protected void reduce(LongWritable key, Iterable<RecommWritable> values, Context context)
 			throws IOException, InterruptedException {
-		int sum = 0;
-	    for(BooleanWritable value : values) {
-			if(!value.get()) {
-				sum = 0;
-				break;
-			} else {
-				sum++;
-			}
-		}
+		PriorityQueue<RecommWritable> queue = new PriorityQueue<>();
+	    for(RecommWritable value : values)
+			if(value.b != 0)
+				queue.add(value);
 
-	    context.write(key, new IntWritable(sum));
+		int i = 0;
+		StringBuilder ret = new StringBuilder();
+		for(RecommWritable couple : queue) {
+			ret.append(couple.a).append(',');
+			i++;
+			if(i == 10) break;
+		}
+		context.write(key, new Text(ret.toString()));
 	}
 }

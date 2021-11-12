@@ -4,6 +4,7 @@ import org.apache.hadoop.io.BooleanWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
+import com.pierre.friendly.Writables.CoupleWritable;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -15,23 +16,23 @@ public class MatchMakerMapper extends Mapper<LongWritable, Text, CoupleWritable,
     
     @Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-    	System.out.println(value.toString());
 		String[] line = value.toString().split("\t");
-		for(String subline : line){
-			System.out.println("   " + subline);
-		}
-		String[] friends = line[1].split(",");
-		int me = Integer.parseInt(line[0]);
+		if(line.length == 1){ //If the user has no friends
+			context.write(new CoupleWritable(key.get(), key.get()), BWfalse); //write a "I'm not friend with myself" so the ID still pops up in the next result set
+		} else {
+			String[] friends = line[1].split(",");
+			long me = Long.parseLong(line[0]);
 
-		LinkedList<Integer> otherFriends = new LinkedList<Integer>();
+			LinkedList<Long> otherFriends = new LinkedList<Long>();
 
-		for(String friend : friends) {
-			int you = Integer.parseInt(friend);
-			context.write(new CoupleWritable(me, you), BWfalse);
-			for(Integer otherFriendId : otherFriends) {
-				context.write(new CoupleWritable(you, otherFriendId), BWtrue);
+			for(String friend : friends) {
+				long you = Long.parseLong(friend);
+				context.write(new CoupleWritable(me, you), BWfalse);
+				for(Long otherFriendId : otherFriends) {
+					context.write(new CoupleWritable(you, otherFriendId), BWtrue);
+				}
+				otherFriends.add(you);
 			}
-			otherFriends.add(you);
 		}
 	}
 }
