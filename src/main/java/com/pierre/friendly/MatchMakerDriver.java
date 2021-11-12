@@ -1,13 +1,11 @@
 package com.pierre.friendly;
 
 import com.pierre.friendly.Writables.CoupleWritable;
-import com.pierre.friendly.Writables.RecommWritable;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.BooleanWritable;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapred.JobClient;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
@@ -27,11 +25,12 @@ public class MatchMakerDriver extends Configured implements Tool {
             System.err.printf("Usage: %s needs two arguments, input and output files\n", getClass().getSimpleName());
             return -1;
         }
+        System.out.println("Starting job 1 (matchmaking) with args " + args[0] + args[1]);
 
         JobConf conf1 = new JobConf(MatchMakerDriver.class);
         conf1.setMapOutputKeyClass(CoupleWritable.class);
         conf1.setMapOutputValueClass(BooleanWritable.class);
-        conf1.setOutputKeyClass(CoupleWritable.class);
+        conf1.setOutputKeyClass(Text.class);
         conf1.setOutputValueClass(IntWritable.class);
 
         Job j1 = Job.getInstance(conf1);
@@ -43,9 +42,7 @@ public class MatchMakerDriver extends Configured implements Tool {
         Path outputPath = new Path(args[1]);
         FileInputFormat.addInputPath(j1, inputPath);
         FileOutputFormat.setOutputPath(j1, outputPath);
-        outputPath.getFileSystem(conf1).delete(outputPath, true); //delete recursively=true
 
-        System.out.println("Job 1 started");
         j1.waitForCompletion(true);
         System.out.println("Job 1 completed");
 

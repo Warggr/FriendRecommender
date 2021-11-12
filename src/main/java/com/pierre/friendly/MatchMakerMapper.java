@@ -1,10 +1,10 @@
 package com.pierre.friendly;
 
+import com.pierre.friendly.Writables.CoupleWritable;
 import org.apache.hadoop.io.BooleanWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
-import com.pierre.friendly.Writables.CoupleWritable;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -28,7 +28,9 @@ public class MatchMakerMapper extends Mapper<LongWritable, Text, CoupleWritable,
 			for(String friend : friends) {
 				long you = Long.parseLong(friend);
 				context.write(new CoupleWritable(me, you), BWfalse);
+				System.err.println(you + " and " + me + " are already friends");
 				for(Long otherFriendId : otherFriends) {
+					System.err.println(you + " and " + otherFriendId + " are friends via " + me);
 					context.write(new CoupleWritable(you, otherFriendId), BWtrue);
 				}
 				otherFriends.add(you);

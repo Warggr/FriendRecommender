@@ -48,21 +48,19 @@
                 <executions>
                     <execution>
                         <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
+                        <goals><goal>single</goal></goals>
                         <id>all</id>
                         <configuration>
                             <archive>
                             <manifest>
-                                <mainClass>
-                                    com.pierre.friendly.FriendAlgoDriver
-                                </mainClass>
+                                <mainClass>com.pierre.friendly.FriendAlgoDriver</mainClass>
                             </manifest>
                             </archive>
                             <descriptorRefs>
                                 <descriptorRef>jar-with-dependencies</descriptorRef>
+                                <descriptorRef>jar</descriptorRef>
                             </descriptorRefs>
+                            <finalName>all</finalName>
                         </configuration>
                     </execution>
                     <execution>
@@ -74,14 +72,14 @@
                         <configuration>
                             <archive>
                             <manifest>
-                                <mainClass>
-                                    com.pierre.friendly.MatchMakerDriver
-                                </mainClass>
+                                <mainClass>com.pierre.friendly.MatchMakerDriver</mainClass>
                             </manifest>
                             </archive>
                             <descriptorRefs>
                                 <descriptorRef>jar-with-dependencies</descriptorRef>
+                                <descriptorRef>jar</descriptorRef>
                             </descriptorRefs>
+                            <finalName>begin</finalName>
                         </configuration>
                     </execution>
                     <execution>
@@ -93,14 +91,14 @@
                         <configuration>
                             <archive>
                             <manifest>
-                                <mainClass>
-                                    com.pierre.friendly.SecondPartDriver
-                                </mainClass>
+                                <mainClass>com.pierre.friendly.SecondPartDriver</mainClass>
                             </manifest>
                             </archive>
                             <descriptorRefs>
                                 <descriptorRef>jar-with-dependencies</descriptorRef>
+                                <descriptorRef>jar</descriptorRef>
                             </descriptorRefs>
+                            <finalName>end</finalName>
                         </configuration>
                     </execution>
                 </executions>

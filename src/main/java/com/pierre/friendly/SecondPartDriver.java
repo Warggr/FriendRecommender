@@ -1,13 +1,11 @@
 package com.pierre.friendly;
 
-import com.pierre.friendly.Writables.CoupleWritable;
 import com.pierre.friendly.Writables.RecommWritable;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.BooleanWritable;
 import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapred.JobClient;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
@@ -27,10 +25,11 @@ public class SecondPartDriver extends Configured implements Tool {
             System.err.printf("Usage: %s needs two arguments, input and output files\n", getClass().getSimpleName());
             return -1;
         }
+        System.out.println("Starting job 2 (sorting) with args " + args[0] + args[1]);
 
         JobConf conf2 = new JobConf(SecondPartDriver.class);
-        conf2.setMapOutputKeyClass(RecommWritable.class);
-        conf2.setMapOutputValueClass(IntWritable.class);
+        conf2.setMapOutputKeyClass(LongWritable.class);
+        conf2.setMapOutputValueClass(RecommWritable.class);
         conf2.setOutputKeyClass(IntWritable.class);
         conf2.setOutputValueClass(Text.class);
 
@@ -43,9 +42,8 @@ public class SecondPartDriver extends Configured implements Tool {
         Path outputPath = new Path(args[1]);
         FileInputFormat.addInputPath(job2, inputPath);
         FileOutputFormat.setOutputPath(job2, outputPath);
-        outputPath.getFileSystem(conf2).delete(outputPath, true); //delete recursively=true
+        //outputPath.getFileSystem(conf2).delete(outputPath, true); //delete recursively=true
 
-        System.out.println("Job 2 started");
         job2.waitForCompletion(true);
         System.out.println("Job 2 completed");
         return 1;

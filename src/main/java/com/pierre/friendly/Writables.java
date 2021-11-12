@@ -41,8 +41,18 @@ public class Writables {
     }
 
     public static class CoupleWritable extends PairWritable<Long, Long> implements WritableComparable<CoupleWritable> {
+        public static final String SEPARATOR = "x";
         CoupleWritable() {}
         CoupleWritable(Long a, Long b) { super(a, b); }
+
+        public static CoupleWritable fromText(String str) {
+            String[] nb = str.split(SEPARATOR);
+            return new CoupleWritable(Long.valueOf(nb[0]), Long.valueOf(nb[1]));
+        }
+
+        public String toText() {
+            return a + Writables.CoupleWritable.SEPARATOR + b;
+        }
 
         @Override
         public void write(DataOutput out) throws IOException {

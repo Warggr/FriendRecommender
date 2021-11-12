@@ -1,24 +1,28 @@
 package com.pierre.friendly;
 
-import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.mapreduce.Mapper;
-import com.pierre.friendly.Writables.RecommWritable;
 import com.pierre.friendly.Writables.CoupleWritable;
+import com.pierre.friendly.Writables.RecommWritable;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Mapper;
 
 import java.io.IOException;
 
-public class FinalMapper extends Mapper<CoupleWritable, IntWritable, LongWritable, RecommWritable> {
+public class FinalMapper extends Mapper<LongWritable, Text, LongWritable, RecommWritable> {
     @Override
-    protected void map(CoupleWritable key, IntWritable value, Context context)
+    protected void map(LongWritable key, Text value, Context context)
             throws IOException, InterruptedException {
+        String[] parts = value.toString().split("\t");
+
         RecommWritable writable = new RecommWritable();
-        writable.b = value.get();
+        writable.b = Integer.valueOf(parts[1]);
 
-        writable.a = key.a;
-        context.write(new LongWritable(key.b), writable);
+        CoupleWritable couple = CoupleWritable.fromText(parts[0]);
 
-        writable.a = key.b;
-        context.write(new LongWritable(key.a), writable);
+        writable.a = couple.a;
+        context.write(new LongWritable(couple.b), writable);
+
+        writable.a = couple.b;
+        context.write(new LongWritable(couple.a), writable);
     }
 }

@@ -19,7 +19,7 @@ public class FriendAlgoDriver extends Configured implements Tool {
 
         String intermedPath = args[1] + "/first-mapper";
         String[] args1 = {args[0], intermedPath};
-        String[] args2 = {intermedPath, args[1]};
+        String[] args2 = {intermedPath, args[1] + "/second-mapper"};
 
         int ret = new MatchMakerDriver().run(args1);
         if(ret != 1) return ret;
