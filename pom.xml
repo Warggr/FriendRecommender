@@ -51,11 +51,50 @@
                         <goals>
                             <goal>single</goal>
                         </goals>
+                        <id>all</id>
                         <configuration>
                             <archive>
                             <manifest>
                                 <mainClass>
                                     com.pierre.friendly.FriendAlgoDriver
+                                </mainClass>
+                            </manifest>
+                            </archive>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <id>begin</id>
+                        <configuration>
+                            <archive>
+                            <manifest>
+                                <mainClass>
+                                    com.pierre.friendly.MatchMakerDriver
+                                </mainClass>
+                            </manifest>
+                            </archive>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <id>end</id>
+                        <configuration>
+                            <archive>
+                            <manifest>
+                                <mainClass>
+                                    com.pierre.friendly.SecondPartDriver
                                 </mainClass>
                             </manifest>
                             </archive>

@@ -25,3 +25,8 @@ REDUCE 2:
 Sort the possible friends for each person
 Input: MyID 	OtherID Integer
 Output: MyID	OtherID AnotherID YetAnotherID ...
+
+# Usage
+
+Building: mvn package
+Running: hadoop jar target/friendly-1.0-jar-with-dependencies.jar INPUT_PATH/INPUT_FILE.txt OUTPUT_PATH
