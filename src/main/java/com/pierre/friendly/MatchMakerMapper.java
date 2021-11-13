@@ -18,21 +18,25 @@ public class MatchMakerMapper extends Mapper<LongWritable, Text, CoupleWritable,
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 		String[] line = value.toString().split("\t");
 		long me = Long.parseLong(line[0]);
-		if(line.length == 1){ //If the user has no friends
-			context.write(new CoupleWritable(me, me), BWfalse); //write a "I'm not friend with myself" so the ID still pops up in the next result set
-		} else {
-			String[] friends = line[1].split(",");
+		//the fictional user -1 is a control channel. Every user will state that he "could be recommended to -1". This will not be processed normally,
+		//but will be kept in the stream until the end - to make sure that every user comes up in the final result set.
+		context.write(new CoupleWritable(-1L, me), BWtrue);
+		
+		if(line.length == 1) return; //If the user had no friends, just stop here.
+		
+		String[] friends = line[1].split(",");
 
-			LinkedList<Long> otherFriends = new LinkedList<Long>();
+		LinkedList<Long> otherFriends = new LinkedList<Long>();
 
-			for(String friend : friends) {
-				long you = Long.parseLong(friend);
-				context.write(new CoupleWritable(me, you), BWfalse);
-				for(Long otherFriendId : otherFriends) {
-					context.write(new CoupleWritable(you, otherFriendId), BWtrue);
-				}
-				otherFriends.add(you);
+		for(String friend : friends) {
+			long you = Long.parseLong(friend);
+			if(you < me){ //ensuring we don't print this twice - it is printed only by me when I'm greater, not by you when you're smaller
+				context.write(new CoupleWritable(me, you), BWfalse); //"I can't be recommended to you" (since we're already friends)
 			}
+			for(long otherFriendId : otherFriends) {
+				context.write(new CoupleWritable(you, otherFriendId), BWtrue); //"you have one common connection with him"
+			}
+			otherFriends.add(you);
 		}
 	}
 }

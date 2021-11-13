@@ -13,15 +13,17 @@ public class MatchReducer extends Reducer<CoupleWritable, BooleanWritable, Text,
 	public void reduce(CoupleWritable key, Iterable<BooleanWritable> values, Context context)
 			throws IOException, InterruptedException {
 		int sum = 0;
-		for(BooleanWritable value : values) {
-			if(!value.get()) {
-				sum = 0;
-				break;
-			} else {
-				sum++;
+		if(key.first != -1){
+			for(BooleanWritable value : values) {
+				if(!value.get()) { //a False means "we can't be recommended since we're already friends"
+					return;
+				} else { //a True means "we have one (more) common friend"
+					sum++;
+				}
 			}
-		}
+		} //else: key.first is -1, it's just a fake connection - just let the number of common connections stay at 0 and print it directly
 
 		context.write(new Text(key.toText()), new IntWritable(sum));
+		//prints a result only if one of the people is -1, or if both could actually be recommended to each other
 	}
 }

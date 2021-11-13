@@ -14,18 +14,21 @@ public class FinalReducer extends Reducer<LongWritable, RecommWritable, LongWrit
 			throws IOException, InterruptedException {
 		PriorityQueue<RecommWritable> queue = new PriorityQueue<>();
 		//RecommWritables are sorted by their b-value (number of common friends) first, then by their a-value (ID of the person)
+		//We sort them using a priority queue.
 	    for(RecommWritable value : values) {
-			if (value.b != 0){
-				queue.add(value.clone());
-			}
+			queue.add(value.clone());
 		}
 
 		StringBuilder ret = new StringBuilder();
 		for(int i = 0; i<10; i++) {
 			RecommWritable couple = queue.poll();
-			if(couple == null) break;
+
+			assert couple != null;
+			//we know exactly what the last member of the queue is: it is the connection with -1 (0 common friends).
+			if(couple.personId == -1) break;//Ignore that last one.
+			
 			if(i != 0) ret.append(',');
-			ret.append(couple.a);
+			ret.append(couple.personId);
 		}
 		context.write(key, new Text(ret.toString()));
 	}
